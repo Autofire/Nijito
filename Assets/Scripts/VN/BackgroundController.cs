@@ -31,7 +31,8 @@ namespace Dialogue.VN {
 			Sprite[] spriteSheet = Resources.LoadAll<Sprite>(bgSpritePath + "/" + bgName);
 
 			if(spriteSheet.Length == 0) {
-				Debug.LogError("Could not find background " + bgName);
+				Debug.LogWarning("Could not find background " + bgName);
+				onComplete?.Invoke();
 			}
 			else {
 				overlayBG.sprite = currentBG.sprite;

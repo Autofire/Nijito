@@ -245,7 +245,10 @@ namespace Dialogue.VN
 		public void Emote(string[] args)
 		{
 			#region Argument handling
-			Assert.IsTrue(args.Length == 2);
+			Assert.IsTrue(args.Length >= 2);
+
+			if (args.Length > 2) Debug.LogWarning("Emote only supports 2 args!");
+
 			Puppet character = puppetmaster.GetPuppet(args[0]);
 			string emoteName = args[1];
 			#endregion

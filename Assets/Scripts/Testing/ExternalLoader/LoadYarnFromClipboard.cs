@@ -52,7 +52,7 @@ namespace Dialogue.Testing
 					Debug.Log(clipboardTitle);
 				}
 
-				string prefix = string.Format("title: {0}\n---\n", clipboardTitle);
+				string prefix = string.Format("title: {0}\n---\n\n", clipboardTitle);
 				string body = Regex.Replace(rawBuffer, "^.*?<<", "<<", RegexOptions.Singleline);
 				string suffix = rawBuffer.EndsWith("===") ? "" : "\n\n===";
 
@@ -69,7 +69,7 @@ namespace Dialogue.Testing
 
 			string clipboardContents = this.clipboardContents; //GUIUtility.systemCopyBuffer;
 
-			var program = YarnImporter.FromString("TEMP", clipboardContents);
+			var program = YarnImporter.FromString(clipboardTitle, clipboardContents);
 			if (program == null)
 			{
 				Debug.LogError("Failed to load; not executing!");

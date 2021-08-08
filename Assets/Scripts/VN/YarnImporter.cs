@@ -62,7 +62,7 @@ namespace Dialogue
 
 			try
 			{
-				YarnProgram programContainer = new YarnProgram();
+				YarnProgram programContainer = ScriptableObject.CreateInstance<YarnProgram>(); // new YarnProgram();
 
 				YarnTranslation[] localizations = new YarnTranslation[0];
 				string baseLanguageID = CultureInfo.CurrentCulture.Name;
