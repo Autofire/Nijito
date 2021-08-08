@@ -77,6 +77,7 @@ namespace Dialogue.VN
 			dialogueRunner.AddCommandHandler("animate", Animate);
 			dialogueRunner.AddCommandHandler("fade", Fade);
 			dialogueRunner.AddCommandHandler("emote", Emote);
+			dialogueRunner.AddCommandHandler("outfit", Outfit);
 			//dialogueRunner.AddCommandHandler("face", Turn);
 		}
 
@@ -420,7 +421,7 @@ namespace Dialogue.VN
 			StagePoint startpoint = null;
 			bool wait = false;
 			Speed moveSpeed = Speed.Normal;
-			List<Puppet.MoveBatch> batches = new List<Puppet.MoveBatch>();
+			List<MoveBatch> batches = new List<MoveBatch>();
 
 			for(int i = 1; i < args.Length; i++)
 			{
@@ -442,10 +443,10 @@ namespace Dialogue.VN
 					case "pull":
 						// [and pull|push TARGET1 [, TARGET2, TARGET3, ...] [to TARGET_POSITION]]
 						StagePoint batchDestination = null;
-						Puppet.MoveBatch.BatchMode mode =
+						MoveBatch.BatchMode mode =
 							args[i].Equals("push")
-								? Puppet.MoveBatch.BatchMode.Push
-								: Puppet.MoveBatch.BatchMode.Pull;
+								? MoveBatch.BatchMode.Push
+								: MoveBatch.BatchMode.Pull;
 						i++;
 
 						List<Puppet> targets = new List<Puppet>();
@@ -484,7 +485,7 @@ namespace Dialogue.VN
 
 						// TODO Handle speeds
 
-						batches.Add(new Puppet.MoveBatch(targets.ToArray(), batchDestination, Speed.Normal, mode));
+						batches.Add(new MoveBatch(targets.ToArray(), batchDestination, Speed.Normal, mode));
 						break;
 
 					default:
@@ -564,7 +565,17 @@ namespace Dialogue.VN
 		/// \warning Not implemented yet.
 		public void Outfit(string[] args)
 		{
-			Debug.LogWarning("Not implemented yet: Outfit");
+			//Debug.LogWarning("Not implemented yet: Outfit");
+			#region Argument handling
+			Assert.IsTrue(args.Length >= 2);
+
+			if (args.Length > 2) Debug.LogWarning("Emote only supports 2 args!");
+
+			Puppet character = puppetmaster.GetPuppet(args[0]);
+			string emoteName = args[1];
+			#endregion
+
+			character.SetOutfit(emoteName);
 		}
 
 		/// <summary>

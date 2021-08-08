@@ -6,67 +6,11 @@ using UnityEngine.Assertions;
 using UnityEngine.UI;
 using Nijito.Paperdoll;
 
-namespace Dialogue.VN {
+namespace Dialogue.VN
+{
 	public class Puppet : MonoBehaviour
 	{
 		public enum Facing { Left, Right }
-
-		/// <summary>
-		/// This is a group of puppets which will be moved by this puppet.
-		/// </summary>
-		public struct MoveBatch {
-
-			public enum BatchMode { Push, Pull };
-
-			public Speed moveSpeed 
-				{ get; private set; }
-			public StagePoint destination
-				{ get; private set; }
-			public BatchMode mode
-				{ get; private set; }
-
-			private List<Puppet> _targets;
-			public Puppet[] targets {
-				get         => _targets.ToArray();
-				private set => _targets = new List<Puppet>(value);
-			}
-
-			public MoveBatch(Puppet[] targets, StagePoint destination, Speed moveSpeed, BatchMode mode) {
-
-				this.moveSpeed = moveSpeed;
-				this.destination = destination;
-				this.mode = mode;
-
-				// Necessary? Yes. Stupid? Definitely.
-				_targets = null;
-
-				// This must come after all fields are initialized; otherwise, VS complains.
-				this.targets = targets ?? throw new ArgumentNullException(nameof(targets));
-			}
-
-			public void RemoveTarget(Puppet target) {
-				_targets.Remove(target);
-			}
-
-			public override bool Equals(object obj) {
-				return base.Equals(obj);
-			}
-
-			public override int GetHashCode() {
-				return base.GetHashCode();
-			}
-
-			public override string ToString() {
-				string result = "(";
-
-				foreach(Puppet target in targets) {
-					result += target.name;
-				}
-
-				result += ") going to " + destination?.name;
-				return result;
-			}
-		}
 
 		[SerializeField] private AnimationSettings animSettings;
 		[SerializeField] private Image imageRenderer;
@@ -101,7 +45,6 @@ namespace Dialogue.VN {
 		[SerializeField] private string fadeOutAnim = "FadeOut";
 
 
-		private Slide _activeSlide;
 		public Slide ActiveSlide {
 			get {
 				return _activeSlide;
@@ -126,35 +69,6 @@ namespace Dialogue.VN {
 			}
 		}
 
-		private RectTransform rTransform;
-
-		private StagePoint _destPoint;
-		private StagePoint DestinationPoint {
-			get {
-				return _destPoint;
-			}
-			set {
-				_destPoint?.RemoveInhabitant(gameObject);
-				_destPoint = value;
-				_destPoint?.AddInhabitant(gameObject, CurrentPosition);
-			}
-		}
-
-		/// <summary>
-		/// Currently active movement batches, used currently for pushing and pulling.
-		/// 
-		/// Never make this null; make it an empty list.
-		/// </summary>
-		private List<MoveBatch> currentBatches = new List<MoveBatch>();
-		private Action onMoveComplete = null;
-		private Speed moveSpeed = Speed.Normal;
-
-		private Vector2 PreviousPosition {
-			get; set;
-		}
-		private Vector2 CurrentPosition {
-			get => rTransform.anchorMin;
-		}
 
 		/// <summary>
 		/// Sets a new destination where we want to slide to.
@@ -199,6 +113,10 @@ namespace Dialogue.VN {
 			ActiveSlide.SetEmote(emoteName);
 		}
 
+		public void SetOutfit(string outfitName) {
+			ActiveSlide.SetOutfit(outfitName);
+		}
+
 		public void SetFacing(Facing newFacing) {
 			Vector3 s = rTransform.localScale;
 			s.x = (newFacing == initialFacing ? 1 : -1);
@@ -223,12 +141,7 @@ namespace Dialogue.VN {
 			PlayAnim(fadeOutAnim, speed, wait, onComplete + (() => DestinationPoint = null));
 		}
 
-		private void SetPosition(float newHorizontalPos)
-		{
-			rTransform.anchorMin = new Vector2(newHorizontalPos, rTransform.anchorMin.y);
-			rTransform.anchorMax = new Vector2(newHorizontalPos, rTransform.anchorMax.y);
-		}
-
+		#region Events
 		private void Awake()
 		{
 			//animationNames = animator.runtimeAnimatorController.animationClips.Select(c => c.name).ToArray();
@@ -325,6 +238,45 @@ namespace Dialogue.VN {
 				}
 			}
 		}
+		#endregion
+
+		#region Internals
+		private RectTransform rTransform;
+
+		private Slide _activeSlide;
+		private StagePoint _destPoint;
+		private StagePoint DestinationPoint {
+			get {
+				return _destPoint;
+			}
+			set {
+				_destPoint?.RemoveInhabitant(gameObject);
+				_destPoint = value;
+				_destPoint?.AddInhabitant(gameObject, CurrentPosition);
+			}
+		}
+
+		/// <summary>
+		/// Currently active movement batches, used currently for pushing and pulling.
+		/// 
+		/// Never make this null; make it an empty list.
+		/// </summary>
+		private List<MoveBatch> currentBatches = new List<MoveBatch>();
+		private Action onMoveComplete = null;
+		private Speed moveSpeed = Speed.Normal;
+
+		private Vector2 PreviousPosition {
+			get; set;
+		}
+		private Vector2 CurrentPosition {
+			get => rTransform.anchorMin;
+		}
+
+		private void SetPosition(float newHorizontalPos)
+		{
+			rTransform.anchorMin = new Vector2(newHorizontalPos, rTransform.anchorMin.y);
+			rTransform.anchorMax = new Vector2(newHorizontalPos, rTransform.anchorMax.y);
+		}
 
 		private static float CalculateSpeed(
 			float startpoint, float endpoint, float position,
@@ -393,6 +345,7 @@ namespace Dialogue.VN {
 
 			return clampedSpeed;
 		}
+		#endregion
 
 
 	}
