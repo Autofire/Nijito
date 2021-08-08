@@ -28,7 +28,6 @@ namespace Dialogue.Testing {
 			}
 
 			var program = YarnImporter.FromFile(pathSrc.text);
-
 			if (program == null)
 			{
 				Debug.LogError("Failed to load; not executing!");
