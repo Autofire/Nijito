@@ -7,7 +7,7 @@
       "dependencies": {
         "com.unity.render-pipelines.universal": "10.4.0"
       },
-      "hash": "cc7e69f63abd990e9c556834873061c4829a6b01"
+      "hash": "59af1e00453f735a081ae00fafacffb87f4330f5"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
