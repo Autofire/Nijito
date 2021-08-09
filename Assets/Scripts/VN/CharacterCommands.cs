@@ -658,9 +658,17 @@ namespace Dialogue.VN
 
 		private StagePoint GetNamedPoint(string posName)
 		{
-			return puppetPoints.FirstOrDefault(
-				(rt) => posName.Equals(rt.name, System.StringComparison.OrdinalIgnoreCase)
-			); 
+			var result = puppetPoints.FirstOrDefault(
+				(rt) => posName.Equals(rt.name, StringComparison.OrdinalIgnoreCase)
+			);
+
+			if (result == null) {
+				result = puppetPoints.First();
+				Debug.LogWarningFormat("Couldn't find point {0}; using {1}", posName, result.name);
+			}
+
+
+			return result;
 		}
 
 		private void ReportInvalidArgument(string command, string arg)

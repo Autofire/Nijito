@@ -45,15 +45,16 @@ namespace Dialogue.Testing
 			{
 				//clipboardContents = Regex.Replace(clipboardContents, "^.*?title:", "title:", RegexOptions.Singleline);
 
-				foreach (Match match in Regex.Matches(rawBuffer, @"^title: .*$", RegexOptions.Multiline))
+				foreach (Match match in Regex.Matches(rawBuffer, @"^title: .*$", RegexOptions.Multiline | RegexOptions.IgnoreCase))
 				{
 					//Debug.LogFormat("Found '{0}' at position {1}.", match.Value, match.Index);
-					clipboardTitle = Regex.Replace(match.Value, @"title:\s*", "");
+					clipboardTitle = Regex.Replace(match.Value, @"title:\s*", "", RegexOptions.IgnoreCase);
 					Debug.Log(clipboardTitle);
 				}
 
 				string prefix = string.Format("title: {0}\n---\n\n", clipboardTitle);
 				string body = Regex.Replace(rawBuffer, "^.*?<<", "<<", RegexOptions.Singleline);
+				body = Regex.Replace(body, ">><<", ">>\n<<", RegexOptions.Singleline);
 				string suffix = rawBuffer.EndsWith("===") ? "" : "\n\n===";
 
 				clipboardContents = prefix + body + suffix;

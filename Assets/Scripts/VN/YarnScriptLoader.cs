@@ -11,8 +11,9 @@ namespace Dialogue.VN {
 		public UnityEvent onMissingScript;
 		[SerializeField] private DialogueRunner runner;
 
-		void Start() {
-			//ScriptSelector.FromName("TestScript"); // TODO Remove
+		private IEnumerator Start() {
+
+			yield return null; // HACK -- Makes sure the scene is fully loaded
 
 			YarnProgram script = Settings.selectedYarn; //?? defaultScript;
 

@@ -126,7 +126,7 @@ namespace Dialogue
 					}
 				}
 
-				Debug.LogFormat("Yarn size: ", programContainer.GetProgram().CalculateSize());
+				Debug.LogFormat("Yarn size: {0}", programContainer.GetProgram().CalculateSize());
 
 				return programContainer;
 			}
